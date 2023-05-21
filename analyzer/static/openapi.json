@@ -1,0 +1,172 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Информационное противоборство API",
+    "version": "0.0.0"
+  },
+  "tags": [
+    {
+      "name": "model",
+      "description": "Модель машинного обучения для работы"
+    }
+  ],
+  "paths": {
+    "/{model}/process/": {
+      "post": {
+        "tags": [
+          "model"
+        ],
+        "summary": "Предсказание выходящего результата модели",
+        "description": "Получить результат обработки текста моделью на наличие в нем противоборства",
+        "operationId": "modelProcess",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "description": "Название модели",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "lg",
+                "lstm",
+                "conv1d"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "В теле запроса указать текст для анализа",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestResult"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestResult"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestResult"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Модель успешно произвела анализ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Невернные данные"
+          },
+          "404": {
+            "description": "Модель не найдена"
+          }
+        }
+      }
+    },
+    "/{model}/retrain/": {
+      "post": {
+        "tags": [
+          "model"
+        ],
+        "summary": "Добавление данных в датасет для последующего переобучения",
+        "description": "Добавление данных в датасет для последующего переобучения",
+        "operationId": "modelRetrain",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "description": "Название модели",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "lg",
+                "lstm",
+                "conv1d"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "В теле запроса указать текст для анализа и его принадлежность",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetrainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Текст добавлен в датасет",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неправильные данные"
+          },
+          "404": {
+            "description": "Модель не найдена"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RequestResult": {
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "RequestResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        }
+      },
+      "RetrainRequest": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "enum": [
+              "attack",
+              "neutral"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

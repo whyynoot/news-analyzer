@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <script src="{% static 'script.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="contianer text-center mt-5">
+    <div class="row">
+        <div class="col-4">
+            <p>
+                Выберите анализирующую модель
+            </p>
+            <div class="btn-group-vertical col-12">
+                <input type="radio" class="btn-check" name="btnradio" id="lg" autocomplete="off">
+                <label class="btn btn-outline-primary" for="lg" style="overflow-wrap: break-word;">CountVectorizer & LogisticRegression</label>
+         
+                <input type="radio" class="btn-check" name="btnradio" id="lstm" autocomplete="off">
+                <label class="btn btn-outline-primary" for="lstm" style="overflow-wrap: break-word;">Tokenizer & LSTM</label>
+
+                <input type="radio" class="btn-check" name="btnradio" id="conv1d" autocomplete="off">
+                <label class="btn btn-outline-primary" for="conv1d" style="overflow-wrap: break-word;">Tokenizer & Conv1D</label>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const buttons = document.querySelectorAll('.btn-group-vertical .btn-outline-primary');
+                buttons.forEach((button) => {
+                    button.addEventListener('click', () => {
+                    buttons.forEach((button) => button.removeAttribute('checked'));
+                    button.setAttribute('checked', '');
+                    });
+                });
+            });
+          </script>
+
+        <div class="col-8">
+            <p>
+                Введите текст для анализа
+            </p>
+            <textarea class="form-control" rows="5" id="input_text"></textarea>
+        </div>
+        
+    </div>
+
+    <div class="row mt-5">
+            <button class="btn btn-outline-success col-12" type="button" id="result_request">Анализировать</button>
+    </div>
+
+    <div class="row result mt-5">
+        <div class="col-6 border border-secondary"><p class="mx-auto mt-3">Результат</p></div>
+        <div class="col-6 border border-secondary">
+            <div class="spinner-border mx-auto mt-3" role="status" hidden="true" id="spinner">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+          <p class="mx-auto mt-3" id="result_show">Сущесвует / Не существует</p></div>
+    </div>
+
+    <div class="row review-result mt-5">
+        <div class="div col-6">
+            <p>Как вы считаете, содержит ли ваше сообщение информационное противоборство?</p>
+            <p>(Помогите нам для дальнешейго обучения моделей)</p>
+        </div>
+        <div class="btn-group mx-auto col-6">
+            <button type="button" class="btn btn-outline-success" id="attack">Да</button>
+            <button type="button" class="btn btn-outline-warning" id="neutral">Нет</button>
+        </div>
+    </div>
+
+    <div class="row review-result mt-5">
+        <div class="div col-12">
+            <p class="retrain_result"></p>
+        </div>
+    </div>
+
+
+</div>
+
+{% endblock content %}
